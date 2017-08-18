@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="false" scanPeriod="10 seconds">
+
+	<!-- ============================== APPENDERS ============================= -->
+	<appender class="ch.qos.logback.core.ConsoleAppender" name="CONSOLE">
+		<encoder>
+			<pattern>%d{dd.MM.yyyy HH:mm:ss} %-5level %logger{35} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- ============================== LOGGERS ============================= -->
+	<root level="DEBUG">
+		<appender-ref ref="CONSOLE" />
+	</root>
+
+	<logger name="hr.mmaracic.wsimproc" level="DEBUG" />
+	<logger name="Eclipselink" level="DEBUG" />
+
+	<!-- Stavljaju se na warn kako ne bi ispisivali beskorisne info poruke -->
+	<logger name="org.apache.catalina.core.ApplicationContext" level="DEBUG" />
+	<logger name="org.springframework.web.context.support.XmlWebApplicationContext" level="WARN" />
+	<logger name="org.springframework.security.config.SecurityNamespaceHandler" level="WARN" />
+	<logger name="org.springframework.security.core.SpringSecurityCoreVersion" level="WARN" />
+	<logger	name="org.springframework.security.config.http.HttpSecurityBeanDefinitionParser" level="WARN" />
+	<logger name="org.springframework.security.web.DefaultSecurityFilterChain" level="WARN" />
+	<logger	name="org.springframework.context.weaving.DefaultContextLoadTimeWeaver" level="WARN" />
+	<logger	name="org.springframework.context.weaving.DefaultContextLoadTimeWeaver"	level="WARN" />
+	<logger	name="org.springframework.beans.factory.support.DefaultListableBeanFactory"	level="WARN" />
+	<logger name="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" level="WARN" />
+
+</configuration>

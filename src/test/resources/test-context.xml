@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:sws="http://www.springframework.org/schema/web-services"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+   http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
+   http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services-2.0.xsd
+   http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
+
+    <context:annotation-config />
+    <context:component-scan base-package="hr.mmaracic.wsimproc.dao, hr.mmaracic.wsimproc.service, hr.mmaracic.wsimproc.controller"/>
+
+
+    <!-- jdbc properties -->
+    <context:property-placeholder ignore-unresolvable="false" location="classpath:jdbc.properties"/>
+
+    <!-- Data source -->
+    <bean id="modelDataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
+        <property name="driverClass" value="${jdbc.modelDriverClassName}" />
+        <property name="jdbcUrl" value="${jdbc.modelUrl}" />
+        <property name="username" value="${jdbc.modelUsername}"/>
+        <property name="password" value="${jdbc.modelPassword}"/>
+
+        <property name="idleConnectionTestPeriodInMinutes" value="1"/>
+        <property name="idleMaxAgeInMinutes" value="4"/>
+        <property name="maxConnectionsPerPartition" value="4"/>
+        <property name="minConnectionsPerPartition" value="2"/>
+        <property name="partitionCount" value="1"/>
+        <property name="acquireIncrement" value="2"/>
+        <property name="statementsCacheSize" value="100"/>
+        <property name="disableConnectionTracking" value="true"/>
+    </bean>
+
+    <!-- 
+           Proxy za dataSource koji dohvaća JDBC konekcije lazy, korisno ako transakcijska
+           metoda uopće ne napravi data access (npr. provider pronađe podatke u L2 cache-u).
+    -->
+    <bean id="modelDataSourceProxy" class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
+        <property name="targetDataSource" ref="modelDataSource" />
+    </bean>
+    
+    <!-- ==============================   JPA CONFIG ModelUnit  ============================= -->
+
+    <bean id="modelEntityFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" >
+        <property name="dataSource" ref="modelDataSourceProxy"/>
+        <property name="persistenceUnitName" value="ModelUnit"/> 
+        <property name="packagesToScan" value="hr.mmaracic.wsimproc.model"/>
+            
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter">
+                <property name="showSql" value="true" />
+                <property name="generateDdl" value="false" />
+                <property name="databasePlatform" value="${jdbc.modelEclipseLinkDatabasePlatform}" />		
+            </bean>
+        </property>
+
+        <property name="jpaProperties">
+            <props>
+                <!-- Staviti na "static" ako se iz mavena radi weaving, "true" za load time weaving -->
+                <prop key="eclipselink.weaving">true</prop>
+
+                <!-- Kako eclipselink ne bi pratio i spremao promjene nad managed objektima van tx stavit na "false" -->
+                <prop key="eclipselink.weaving.changetracking">false</prop>
+
+                <prop key="eclipselink.logging.logger">DefaultLogger</prop>
+                <prop key="eclipselink.logging.level.sql">FINE</prop>
+                <prop key="eclipselink.logging.parameters">true</prop>
+                <prop key="eclipselink.logging.session">false</prop>
+                <prop key="eclipselink.logging.connection">false</prop>
+                <prop key="eclipselink.logging.thread">false</prop>
+            </props>
+        </property>
+        <property name="jpaDialect">
+            <bean class="org.springframework.orm.jpa.vendor.EclipseLinkJpaDialect">
+                <!-- 
+                       L2 cache radi sa spring transakcijama samo ako se ovo postavi na true.
+                       Napomena: ako se stavi na true tada se ne mogu miješati JPA transakcije sa JDBC
+                       transakcijama - dakle, ako se miješa JDBC kod sa JPA kodom, ovo MORA  biti na false! 
+                       (http://wiki.eclipse.org/EclipseLink/Examples/JPA/JPASpring#Common_Issues)
+                -->
+                <property name="lazyDatabaseTransaction" value="true" />
+            </bean>
+        </property>
+        <!-- 
+               Load time weaver kojeg koristi eclipselink zahtjeva pokretanje sa jvm opcijom, gdje se mora
+               izmjeniti path do spring-instrument.jar datoteke: -javaagent:d:/temp/spring-instrument-3.1.2.jar
+               Ovo mora biti biti postavljeno kao vm argument (npr. na tomcatu)
+        --> 
+        <property name="loadTimeWeaver">
+            <bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver"/>
+        </property>
+    </bean>
+
+    <!-- ==============================   TRANSACTION CONFIG   ============================= -->
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="modelEntityFactory"/>
+        <qualifier value="model"/>
+    </bean>
+
+    <!-- Transakcije nad servisima su definirane anotacijama -->
+    <tx:annotation-driven/>    
+</beans>
