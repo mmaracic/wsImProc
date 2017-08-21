@@ -13,6 +13,9 @@ import hr.mmaracic.wsimproc.service.ImageConversionService;
 import hr.mmaracic.wsimproc.service.UserService;
 import java.awt.Image;
 import java.awt.image.ImageObserver;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
@@ -35,11 +38,11 @@ import org.w3c.dom.Document;
  */
 @Service
 @Transactional
-public class ImageConversionServiceImpl implements ImageConversionService{
-    
+public class ImageConversionServiceImpl implements ImageConversionService {
+
     @Autowired
     private ImageConversionDao conversionDao;
-    
+
     @Autowired
     private UserService userService;
 
@@ -68,7 +71,7 @@ public class ImageConversionServiceImpl implements ImageConversionService{
             Document document = domImpl.createDocument(svgNS, "svg", null);
             // Create an instance of the SVG Generator.
             SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
-            
+
             //Add content
             svgGenerator.drawImage(image, 0, 0, new ImageObserver() {
                 @Override
@@ -76,16 +79,20 @@ public class ImageConversionServiceImpl implements ImageConversionService{
                     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                 }
             });
-            
-            // Finally, stream out SVG to the standard output using
+
+            // Finally, stream out SVG to a file using
             // UTF-8 encoding.
             boolean useCSS = true; // we want to use CSS style attributes
-            out = new OutputStreamWriter(System.out, "UTF-8");
+            File outFile = new File("svgTest.svg");
+            FileOutputStream fop = new FileOutputStream(outFile);
+            out = new OutputStreamWriter(fop, "UTF-8");
             svgGenerator.stream(out, useCSS);
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(ImageConversionService.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SVGGraphics2DIOException ex) {
             Logger.getLogger(ImageConversionService.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ImageConversionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 out.close();
@@ -94,5 +101,5 @@ public class ImageConversionServiceImpl implements ImageConversionService{
             }
         }
         return conversion;
-    }    
+    }
 }
