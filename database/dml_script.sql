@@ -1,6 +1,8 @@
+--delete from ws_im_proc.users;
+
 --marijo/test
 INSERT INTO ws_im_proc.users(username, password)
-	VALUES ('marijo', '$2y$10$MILanOhwnDP99xWzKM3Ske6bGfRp8TH3sNEzd1TDRlnj.ntYn0nDW');
+	VALUES ('marijo', '$2a$04$ZD1LME/pJYYFEu5CGpNBduAsmFNIwN.p6RgeU8E.6SvXLsTvrQSoa');
 --test/passwd    
 INSERT INTO ws_im_proc.users(username, password)
-	VALUES ('test', '$2y$10$2k44yVyCkyGfg1zyVv8vxe0dRGaO22b9F2rxNLuH90SVwthpx9tlG');
+	VALUES ('test', '$2a$04$c9CSa/snzPK4aGoqz7dn5.AJImzelMSbjuI5P2Yog0Kj.whAMveY2');

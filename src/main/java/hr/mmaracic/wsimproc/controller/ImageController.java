@@ -5,6 +5,7 @@
  */
 package hr.mmaracic.wsimproc.controller;
 
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ImageController {
     
     @RequestMapping(method=POST, value="/upload")
-    public String uploadImage(MultipartFile file, RedirectAttributes redirectAttributes){
+    public String uploadImage(@RequestBody MultipartFile file, RedirectAttributes redirectAttributes){
 
         redirectAttributes.addFlashAttribute("message",
                 "You successfully uploaded " + file.getOriginalFilename() + "!");

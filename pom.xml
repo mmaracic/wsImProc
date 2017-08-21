@@ -139,7 +139,19 @@
             <artifactId>spring-test</artifactId>
             <version>${spring.version}</version>
             <scope>test</scope>
-        </dependency>        
+        </dependency>      
+        
+        <!-- https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-svggen -->
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-svggen</artifactId>
+            <version>1.9.1</version>
+        </dependency>  
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-dom</artifactId>
+            <version>1.7</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -173,7 +185,7 @@
                 <configuration>
                     <forkMode>once</forkMode>
                     <argLine>
-                         -javaagent:"D:\Programi\Libraries\spring\spring-instrument-4.1.6.RELEASE.jar"
+                        -javaagent:"D:\Programi\Libraries\spring\spring-instrument-4.1.6.RELEASE.jar"
                     </argLine>
                     <useSystemClassloader>true</useSystemClassloader>
                 </configuration>

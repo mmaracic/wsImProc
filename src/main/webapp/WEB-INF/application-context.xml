@@ -14,16 +14,15 @@
    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
 
     <context:annotation-config />
-    <context:component-scan base-package="hr.mmaracic.wsimproc.model, hr.mmaracic.wsimproc.dao, hr.mmaracic.wsimproc.service, hr.mmaracic.wsimproc.controller"/>
+    <context:component-scan base-package="hr.mmaracic.wsimproc.dao, hr.mmaracic.wsimproc.service, hr.mmaracic.wsimproc.controller"/>
 
     <!-- Enables the Spring MVC @Controller programming model -->
     <mvc:annotation-driven />
-    <mvc:default-servlet-handler />
     
     <!-- Spring security -->
     <security:authentication-manager>
         <security:authentication-provider user-service-ref="userDetailsService">
-            <password-encoder ref="bcryptEncoder"/>
+            <security:password-encoder ref="bcryptEncoder"/>
         </security:authentication-provider>
     </security:authentication-manager>
     
@@ -33,7 +32,7 @@
     
     <security:http use-expressions="true" auto-config="true" create-session="never">
         <security:csrf disabled="true" />
-        <security:intercept-url pattern="/image/*" access="hasRole('ROLE_USER')" />
+        <!--<security:intercept-url pattern="/image/*" access="hasRole('ROLE_USER')" />-->
     </security:http>
 
     <!-- jdbc properties -->

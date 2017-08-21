@@ -19,7 +19,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
  * @author Marijo
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath*:test-context.xml"})
+@ContextConfiguration(locations = {"classpath:test-context.xml"})
 @WebAppConfiguration
 public class UserDaoTest {
 

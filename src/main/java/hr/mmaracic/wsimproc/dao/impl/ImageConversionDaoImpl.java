@@ -9,6 +9,8 @@ import java.util.List;
 import hr.mmaracic.wsimproc.base.GenericDao;
 import hr.mmaracic.wsimproc.dao.ImageConversionDao;
 import hr.mmaracic.wsimproc.model.ImageConversion;
+import hr.mmaracic.wsimproc.model.User;
+import javax.persistence.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -21,5 +23,13 @@ public class ImageConversionDaoImpl extends GenericDao<ImageConversion> implemen
     @Override
     public List<ImageConversion> getAll() {
         return getAll(ImageConversion.class);
+    }
+
+    @Override
+    public List<ImageConversion> getByUser(User user) {
+        Query query = this.entityManager.createQuery("SELECT im  FROM ImageConversion AS im LEFT JOIN im.user AS u WHERE u.id = :ID");
+        query.setParameter("ID", user.getId());
+        List<ImageConversion> conversions = query.getResultList();
+        return conversions;
     }
 }

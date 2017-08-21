@@ -7,6 +7,7 @@ package hr.mmaracic.wsimproc.dao;
 
 import java.util.List;
 import hr.mmaracic.wsimproc.model.ImageConversion;
+import hr.mmaracic.wsimproc.model.User;
 
 /**
  *
@@ -15,6 +16,8 @@ import hr.mmaracic.wsimproc.model.ImageConversion;
 public interface ImageConversionDao {
     
     List<ImageConversion> getAll();
+    
+    List<ImageConversion> getByUser(User user);
     
     ImageConversion create(ImageConversion image);    
 }

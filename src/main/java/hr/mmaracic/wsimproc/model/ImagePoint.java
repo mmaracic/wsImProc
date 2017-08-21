@@ -41,6 +41,13 @@ public class ImagePoint implements Serializable {
     
     @Column(name = "y", nullable = false)
     private int y;
+    
+    public ImagePoint() {}
+    
+    public ImagePoint(int x, int y){
+        this.x = x;
+        this.y = y;
+    }
 
     public BigInteger getId() {
         return id;
