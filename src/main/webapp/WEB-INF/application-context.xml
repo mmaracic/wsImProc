@@ -30,9 +30,10 @@
     
     <bean id="bcryptEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
     
-    <security:http use-expressions="true" auto-config="true" create-session="never">
-        <security:csrf disabled="true" />
-        <!--<security:intercept-url pattern="/image/*" access="hasRole('ROLE_USER')" />-->
+    <security:http use-expressions="true" auto-config="true"> <!-- create-session="never" -->
+        <!--<security:csrf disabled="true" />-->
+        <security:intercept-url pattern="/image/*" access="hasRole('ROLE_USER')" />
+        <security:intercept-url pattern="/login*" access="permitAll" requires-channel="https"/>
     </security:http>
 
     <!-- jdbc properties -->
