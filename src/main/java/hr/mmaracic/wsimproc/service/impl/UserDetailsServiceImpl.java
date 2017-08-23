@@ -28,8 +28,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         hr.mmaracic.wsimproc.model.User userModel = userDao.getByUsername(username);
+        if (userModel != null){
         UserDetails springUser = buildUserFromModel(userModel);
         return springUser;
+        } else {
+            throw new UsernameNotFoundException(username);
+        }
     }
 
     private User buildUserFromModel(hr.mmaracic.wsimproc.model.User user) {

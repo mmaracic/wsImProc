@@ -15,6 +15,7 @@
 
 	<logger name="hr.mmaracic.wsimproc" level="DEBUG" />
 	<logger name="Eclipselink" level="DEBUG" />
+        <logger name="org.springframework.web" level="DEBUG"/>
 
 	<!-- Stavljaju se na warn kako ne bi ispisivali beskorisne info poruke -->
 	<logger name="org.apache.catalina.core.ApplicationContext" level="DEBUG" />

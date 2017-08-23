@@ -11,6 +11,24 @@
    http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
    http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services-2.0.xsd">
     
+    <!-- Configure to plugin JSON as request and response in method handler -->
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <ref bean="jsonMessageConverter"/>
+                <ref bean="formHttpMessageConverter" />
+            </list>
+        </property>
+    </bean>
+     
+    <!-- Configure bean to convert to 'normal' HTML forms to  MultiValueMap<String, String> and vice versa -->
+    <bean id="formHttpMessageConverter" class="org.springframework.http.converter.FormHttpMessageConverter">
+    </bean>
+         
+    <!-- Configure bean to convert JSON to POJO and vice versa -->
+    <bean id="jsonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+    </bean>     
+
     <bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="multipartResolver"> 
         <property name="maxUploadSize" value="500000" /> 
     </bean>

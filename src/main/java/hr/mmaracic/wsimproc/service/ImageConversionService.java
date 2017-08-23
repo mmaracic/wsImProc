@@ -8,7 +8,7 @@ package hr.mmaracic.wsimproc.service;
 import hr.mmaracic.wsimproc.model.ImageConversion;
 import hr.mmaracic.wsimproc.model.ImagePoint;
 import hr.mmaracic.wsimproc.model.User;
-import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 /**
@@ -21,5 +21,5 @@ public interface ImageConversionService {
     
     List<ImageConversion> getConversionForCurrentUser();
     
-    ImageConversion performConversion(Image image, List<ImagePoint> points, User user);    
+    ImageConversion performConversion(BufferedImage image, List<ImagePoint> points, User user);    
 }
