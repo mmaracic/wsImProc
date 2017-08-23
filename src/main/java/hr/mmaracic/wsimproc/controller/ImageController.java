@@ -14,7 +14,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -36,7 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 @RequestMapping("/image")
 public class ImageController {
-    
+
     static final Logger log = LoggerFactory.getLogger(ImageController.class);
 
     @Autowired
@@ -51,15 +50,26 @@ public class ImageController {
         User user = userService.getCurrentUser();
         List<ImagePoint> points = (List<ImagePoint>) session.getAttribute("points");
 
+        if (points == null || points.size() == 0) {
+            response.setStatus(HttpServletResponse.SC_SEE_OTHER);
+            response.setHeader("Location", "/");
+            return;
+        }
+
         try {
             BufferedImage image = ImageIO.read(file.getInputStream());
+            if (image == null || image.getWidth() == 0 || image.getHeight() == 0) {
+                response.setStatus(HttpServletResponse.SC_SEE_OTHER);
+                response.setHeader("Location", "/");
+                return;
+            }
+
             ImageConversion conversion = conversionService.performConversion(image, points, user);
 
             session.removeAttribute("points");
 
-            response.setStatus(HttpServletResponse.SC_SEE_OTHER);
-            response.setHeader("Location", "/");
-
+            //response.setStatus(HttpServletResponse.SC_SEE_OTHER);
+            //response.setHeader("Location", "/");
             response.setContentType("image/svg+xml");
             response.setHeader("Content-Disposition", "attachment; filename=\"output.svg\"");
             ServletOutputStream outStr = response.getOutputStream();
@@ -70,21 +80,21 @@ public class ImageController {
         }
     }
 
-    @RequestMapping(method = POST, value = "/points", consumes="application/x-www-form-urlencoded")
+    @RequestMapping(method = POST, value = "/points", consumes = "application/x-www-form-urlencoded")
     public void uploadPoints(@RequestBody MultiValueMap<String, String> kvps, HttpServletResponse response, HttpSession session) {
         List<ImagePoint> points = new ArrayList<>();
         String strPoints = kvps.get("points").get(0);
         String[] tempPoints = strPoints.split("\\s*;\\s*");
-        for(String tempPoint: tempPoints){
+        for (String tempPoint : tempPoints) {
             String[] coordinates = tempPoint.split("\\s*,\\s*");
-            try{
+            try {
                 ImagePoint point = new ImagePoint(Integer.parseInt(coordinates[0]), Integer.parseInt(coordinates[1]));
                 points.add(point);
-            } catch (NumberFormatException ex){
+            } catch (NumberFormatException ex) {
                 log.error(ex.getLocalizedMessage());
             }
         }
-        if (points.size()>0){
+        if (points.size() > 0) {
             session.setAttribute("points", points);
         }
 

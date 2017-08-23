@@ -13,9 +13,12 @@ import hr.mmaracic.wsimproc.service.UserService;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import javax.imageio.ImageIO;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -33,16 +36,16 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @ContextConfiguration(locations = {"classpath*:test-context.xml"})
 @WebAppConfiguration
 public class ImageConversionServiceTest {
-    
+
     @Autowired
     private ImageConversionService conversionService;
-    
+
     @Autowired
     private UserService userService;
-    
+
     public ImageConversionServiceTest() {
     }
-    
+
     //@Test
     public void getAllCinversions() {
         List<ImageConversion> conversions = conversionService.getAllCinversions();
@@ -57,22 +60,29 @@ public class ImageConversionServiceTest {
 
     @Test
     public void performConversion() throws IOException {
+        Calendar cal = Calendar.getInstance();
         User user = userService.getUserByUsername("marijo");
         assertNotNull("Current user is null", user);
-        
+
         List<ImagePoint> points = new ArrayList<>();
-        points.add(new ImagePoint(31,75));
+        points.add(new ImagePoint(31, 75));
         points.add(new ImagePoint(149, 37));
-        points.add(new ImagePoint(132,141));
-        
+        points.add(new ImagePoint(132, 141));
+
         File imFile = new File(ImageConversionServiceTest.class.getClassLoader().getResource("sample.png").getFile());
         assertNotNull("Image file is null", imFile);
-        
+
         BufferedImage image = ImageIO.read(imFile);
         assertNotEquals("Image width is 0", 0, image.getWidth());
         assertNotEquals("Image height is 0", 0, image.getHeight());
-        
+
         ImageConversion conversion = conversionService.performConversion(image, points, user);
         assertNotNull("Conversion is null", conversion);
+
+        File outFile = new File("svgTest_"+cal.getTimeInMillis()+".svg");
+        FileOutputStream fop = new FileOutputStream(outFile);
+        fop.write(conversion.getVectorImage());
+        fop.close();
+
     }
 }

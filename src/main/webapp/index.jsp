@@ -15,7 +15,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <form method="POST" enctype="application/x-www-form-urlencoded" action="/rest/image/points" id="usrform">
+                        <form method="POST" enctype="application/x-www-form-urlencoded" action="/rest/image/points?${_csrf.parameterName}=${_csrf.token}" id="usrform">
                             <input type="submit">
                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                         </form>
@@ -28,14 +28,15 @@
         <c:if test="${sessionScope.points != null}">
             <!-- File upload -->
             <div>
-                <form method="POST" enctype="multipart/form-data" action="/rest/image/upload" id="imageform">
+                <form method="POST" enctype="multipart/form-data" action="/rest/image/upload?${_csrf.parameterName}=${_csrf.token}" id="imageform">
                     <table>
                         <tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
                         <tr><td></td><td><input type="submit" value="Upload" /></td></tr>
                     </table>
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 </form>
-            </div>   
+            </div>
         </c:if>
+        <a href="logout.jsp">Log-out</a>
     </body>
 </html>

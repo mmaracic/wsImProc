@@ -25,7 +25,7 @@ import javax.persistence.TemporalType;
  * @author Marijo
  */
 @Entity
-@Table(name = "ws_im_proc.image_conversion")
+@Table(name = "ws_im_proc.image_conversions")
 public class ImageConversion implements Serializable {
     
     @Id
@@ -50,7 +50,7 @@ public class ImageConversion implements Serializable {
     @Column(name = "im_height", nullable = false)
     private int imHeight;
     
-    @Column(name = "original_iamge", nullable = false)
+    @Column(name = "original_image", nullable = false)
     private byte[] originalImage;
     
     @Column(name = "vector_image", nullable = false)
