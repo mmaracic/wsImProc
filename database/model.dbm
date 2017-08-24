@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+         Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="0.7.0">
+<role name="marijo"
+      superuser="true"
+      password="********">
+</role>
+
+<database name="dynniq" encoding="UTF8" lc-collate="Croatian_Croatia" lc-ctype="Croatian_Croatia">
+	<role name="marijo"/>
+	<tablespace name="pg_default"/>
+</database>
+
+<schema name="public" protected="true" rect-visible="true" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<schema name="ws_im_proc" rect-visible="true" fill-color="#d66b29">
+	<role name="marijo"/>
+</schema>
+
+<sequence name="seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="ws_im_proc"/>
+	<role name="marijo"/>
+</sequence>
+
+<table name="users">
+	<schema name="ws_im_proc"/>
+	<role name="marijo"/>
+	<position x="125" y="50"/>
+	<column name="id" not-null="true" default-value="nextval('ws_im_proc.seq'::regclass)">
+		<type name="bigint"/>
+	</column>
+	<column name="username" not-null="true">
+		<type name="character varying"/>
+	</column>
+	<column name="password" not-null="true">
+		<type name="character varying"/>
+	</column>
+	<column name="last_access">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="users_username_key" type="uq-constr" factor="100" table="ws_im_proc.users">
+		<columns names="username" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="users_pk" type="pk-constr" factor="100" table="ws_im_proc.users">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="image_conversions">
+	<schema name="ws_im_proc"/>
+	<role name="marijo"/>
+	<position x="442" y="283"/>
+	<column name="id" not-null="true" default-value="nextval('ws_im_proc.seq'::regclass)">
+		<type name="bigint"/>
+	</column>
+	<column name="access_date" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="user_id" not-null="true">
+		<type name="bigint"/>
+	</column>
+	<column name="im_width" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="im_height" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="original_image" not-null="true">
+		<type name="bytea"/>
+	</column>
+	<column name="vector_image" not-null="true">
+		<type name="bytea"/>
+	</column>
+	<constraint name="image_conversions_pk" type="pk-constr" factor="100" table="ws_im_proc.image_conversions">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<index name="image_conversions_date" table="ws_im_proc.image_conversions"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="access_date"/>
+		</idxelement>
+	</index>
+	<index name="image_conversions_user" table="ws_im_proc.image_conversions"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="user_id"/>
+		</idxelement>
+	</index>
+</table>
+
+<table name="image_points">
+	<schema name="ws_im_proc"/>
+	<role name="marijo"/>
+	<position x="678" y="50"/>
+	<column name="id" not-null="true" default-value="nextval('ws_im_proc.seq'::regclass)">
+		<type name="bigint"/>
+	</column>
+	<column name="image_id" not-null="true">
+		<type name="bigint"/>
+	</column>
+	<column name="x" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="y" not-null="true">
+		<type name="integer"/>
+	</column>
+	<constraint name="image_points_pk" type="pk-constr" factor="100" table="ws_im_proc.image_points">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<index name="image_points_image_conversions" table="ws_im_proc.image_points"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="image_id"/>
+		</idxelement>
+	</index>
+</table>
+
+<view name="user_image_conversions">
+	<schema name="ws_im_proc"/>
+	<role name="marijo"/>
+	<position x="802.766" y="292"/>
+	<reference>
+		<expression><![CDATA[ SELECT u.username,
+    im.access_date,
+    im.im_width,
+    im.im_height,
+    count(pt.image_id) AS count
+   FROM ((ws_im_proc.users u
+     LEFT JOIN ws_im_proc.image_conversions im ON ((u.id = im.user_id)))
+     LEFT JOIN ws_im_proc.image_points pt ON ((im.id = pt.image_id)))
+  GROUP BY u.username, im.access_date, im.im_width, im.im_height, pt.image_id;]]></expression>
+	</reference>
+</view>
+
+<constraint name="image_conversions_users" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="ws_im_proc.users" table="ws_im_proc.image_conversions">
+	<columns names="user_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="image_points_image_conversions" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="ws_im_proc.image_conversions" table="ws_im_proc.image_points">
+	<columns names="image_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<relationship name="rel_image_conversions_users" type="relfk"
+	 src-table="ws_im_proc.image_conversions"
+	 dst-table="ws_im_proc.users"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_image_points_image_conversions" type="relfk"
+	 src-table="ws_im_proc.image_points"
+	 dst-table="ws_im_proc.image_conversions"
+	 src-required="true" dst-required="true"/>
+
+</dbmodel>
