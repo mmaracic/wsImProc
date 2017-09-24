@@ -14,7 +14,7 @@
    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
 
     <context:annotation-config />
-    <context:component-scan base-package="hr.mmaracic.wsimproc.dao, hr.mmaracic.wsimproc.service, hr.mmaracic.wsimproc.controller"/>
+    <context:component-scan base-package="hr.mmaracic.wsimproc.vaadin, hr.mmaracic.wsimproc.dao, hr.mmaracic.wsimproc.service, hr.mmaracic.wsimproc.controller"/>
 
     <!-- Enables the Spring MVC @Controller programming model -->
     <mvc:annotation-driven />
@@ -32,6 +32,7 @@
     
     <security:http use-expressions="true" auto-config="true">
         <security:intercept-url pattern="/**" access="isAuthenticated()" />
+        <security:csrf disabled="true"/>
     </security:http>
 
     <!-- jdbc properties -->

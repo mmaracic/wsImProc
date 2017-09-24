@@ -30,6 +30,7 @@
         <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
     
+    <!-- Spring Security -->
     <filter>
         <filter-name>springSecurityFilterChain</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -39,5 +40,33 @@
         <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+    
+    <!-- Vaadin -->
+    <context-param>
+        <param-name>productionMode</param-name>
+        <param-value>true</param-value>
+        <description>Vaadin production mode</description>
+    </context-param>
+    
+    <servlet>
+        <servlet-name>vaadin</servlet-name>
+        <servlet-class>
+            com.vaadin.server.VaadinServlet
+        </servlet-class>
+        <init-param>
+            <param-name>UI</param-name>
+            <param-value>hr.mmaracic.wsimproc.vaadin.ImageVectorizationUI</param-value>
+        </init-param>
+        <!-- If not using the default widget set-->
+        <!--<init-param>
+            <param-name>widgetset</param-name>
+            <param-value>com.ex.myprj.MyWidgetSet</param-value>
+        </init-param>-->
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>vaadin</servlet-name>
+        <url-pattern>/vaadin/*</url-pattern>
+        <url-pattern>/VAADIN/*</url-pattern>
+    </servlet-mapping>    
     
 </web-app>

@@ -1,0 +1,117 @@
+[INFO] Scanning for projects...
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building wsImProc 1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-help-plugin:2.2:describe (default-cli) @ wsImProc ---
+[INFO] com.vaadin:vaadin-maven-plugin:8.1.3
+
+Name: Vaadin Plug-in for Maven
+Description: Maven plugin for Vaadin.
+Group Id: com.vaadin
+Artifact Id: vaadin-maven-plugin
+Version: 8.1.3
+Goal Prefix: vaadin
+
+This plugin has 20 goals:
+
+vaadin:clean
+  Description: Cleanup the webapp directory for GWT module compilation output
+
+vaadin:compile
+  Description: Invokes the GWT Compiler for the project source. See compiler
+    options :
+    http://www.gwtproject.org/doc/latest/DevGuideCompilingAndDebugging.html#DevGuideCompilerOptions
+
+vaadin:compile-report
+  Description: see
+    http://code.google.com/webtoolkit/doc/latest/DevGuideCompileReport.html#Usage
+
+vaadin:compile-theme
+  Description: Updates Vaadin themes based on addons containing themes on the
+    classpath.
+
+vaadin:css
+  Description: Creates CSS interfaces for css files. Will use the utility
+    tool provided in gwt sdk which create a corresponding Java interface for
+    accessing the classnames used in the file.
+
+vaadin:debug
+  Description: Runs the project with a debugger port hook (optionally
+    suspended).
+
+vaadin:eclipse
+  Description: Goal which creates Eclipse lauch configurations for GWT
+    modules.
+
+vaadin:eclipseTest
+  Description: Goal which creates Eclipse lauch configurations for
+    GWTTestCases.
+  Deprecated. use google eclipse plugin
+  http://code.google.com/intl/fr-FR/eclipse/docs/users_guide.html
+
+vaadin:generateAsync
+  Description: Goal which generate Async interface.
+
+vaadin:help
+  Description: Display help information on vaadin-maven-plugin.
+    Call mvn vaadin:help -Ddetail=true -Dgoal=<goal-name> to display parameter
+    details.
+
+vaadin:i18n
+  Description: Creates I18N interfaces for constants and messages files.
+
+vaadin:mergewebxml
+  Description: Merges GWT servlet elements into deployment descriptor (and
+    non GWT servlets into shell).
+    If you use scanRemoteServiceRelativePathAnnotation you must bind this mojo
+    to at least compile phase Because the classpath scanner need to see compile
+    classes
+
+vaadin:resources
+  Description: Copy GWT java source code and module descriptor as resources
+    in the build outputDirectory. Alternative to declaring a <resource> in the
+    POM with finer filtering as the module descriptor is read to detect sources
+    to be copied.
+
+vaadin:run
+  Description: Runs the project in the GWT (Classic or Super) Dev Mode for
+    development.
+
+vaadin:run-codeserver
+  Description: Runs GWT modules with Super Dev Mode.
+
+vaadin:source-jar
+  Description: Add GWT java source code and module descriptor as resources to
+    project jar. Alternative to gwt:resources for better Eclipse projects
+    synchronization.
+
+vaadin:test
+  Description: Mimic surefire to run GWTTestCases during integration-test
+    phase, until SUREFIRE-508 is fixed
+
+vaadin:update-theme
+  Description: Updates Vaadin themes based on addons containing themes on the
+    classpath. This goal is linked to phase generate-sources to make sure it is
+    executed before compile-theme.
+
+vaadin:update-widgetset
+  Description: Updates Vaadin widgetsets based on other widgetset packages on
+    the classpath. It is assumed that the project does not directly contain
+    other GWT modules. In part adapted from gwt-maven-plugin CompileMojo.
+
+vaadin:upgrade8
+  Description: Updates Vaadin 7 class imports to their corresponding
+    compatibility imports in a Vaadin 8 project. Additionally updates
+    declarative files to use the correct versions of components.
+
+For more information, run 'mvn help:describe [...] -Ddetail'
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 0.813 s
+[INFO] Finished at: 2017-09-03T21:46:41+02:00
+[INFO] Final Memory: 14M/464M
+[INFO] ------------------------------------------------------------------------
