@@ -44,7 +44,7 @@ public class ImageController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(method = POST, value = "/upload")
+    @RequestMapping(method = POST, value = "/upload", consumes = "multipart/form-data")
     public void uploadImage(@RequestBody MultipartFile file, HttpServletResponse response, HttpSession session) {
 
         User user = userService.getCurrentUser();
